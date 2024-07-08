@@ -47,6 +47,21 @@ export async function getInterfaceInfoByIdUsingGet(
   });
 }
 
+/** invokeInterfaceInfo POST /api/InterfaceInfo/invoke */
+export async function invokeInterfaceInfoUsingPost(
+  body: API.InterfaceInfoInvokeRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseobject>('/api/InterfaceInfo/invoke', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listInterfaceInfo GET /api/InterfaceInfo/list */
 export async function listInterfaceInfoUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
