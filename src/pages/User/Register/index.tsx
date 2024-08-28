@@ -1,8 +1,10 @@
 import { Footer } from '@/components';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
+  LinkOutlined,
   LockOutlined, MailOutlined,
+  MobileOutlined,
+  RedditOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
@@ -14,16 +16,17 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Tabs, message } from 'antd';
+import { message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
 import {
   getCaptchaUsingGet,
-  userEmailLoginUsingPost,
-  userLoginUsingPost
-} from "@/services/dongapi-backend/userController";
-import {Link} from "@@/exports";
+  userEmailLoginUsingPost, userEmailRegisterUsingPost,
+  userLoginUsingPost, userRegisterUsingPost,
+} from '@/services/dongapi-backend/userController';
+import { Link } from '@@/exports';
+
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
@@ -69,90 +72,62 @@ const ActionIcons = () => {
     </>
   );
 };
-const Lang = () => {
-  const { styles } = useStyles();
-  return;
-};
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
-const Login: React.FC = () => {
+
+const Register: React.FC = () => {
   const [userLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState,setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
 
-  //登录验证公共方法
-  const doLogin = (res: any) => {
+  //注册验证公共方法
+  const doRegister = (res: any) => {
     if (res.data && res.code === 0){
-      message.success("登录成功");
+      message.success("注册成功");
       //1.因为组件销毁了还在设置状态（setState方法是异步更新的），所以不延迟跳转的话会直接跳转.还可以用flushSync 但不推荐
       setTimeout(() => {
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        history.push('/user/login');
       },100)
-      //2.设置登录状态
-      setInitialState({
-        //用户数据
-        loginUser: res.data,
-        //页面样式
-        settings: Settings
-      });
-
     }
   }
 
-  //账号密码登录
-  const handleSubmit = async (values: API.UserLoginRequest) => {
+  //账号密码注册
+  const handleSubmit = async (values: API.UserRegisterRequest) => {
     try {
-      // 登录
-      const res = await userLoginUsingPost({
+      // 注册
+      const res = await userRegisterUsingPost({
         ...values,
       });
-      //使用公共登录验证
-     doLogin(res);
+      //使用公共注册验证
+     doRegister(res);
     } catch (error: any) {
-      // const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log("超市菜市场:",error);
+      // const defaultLoginFailureMessage = '注册失败，请重试！';
+      console.log("注册失败:",error.message);
+      message.error(error.message);
+    }
+  };
+
+  //邮箱注册
+  const handleEmailSubmit = async (values: API.UserEmailRegister) => {
+    try {
+      // 注册
+      const res = await userEmailRegisterUsingPost({
+        ...values,
+      });
+     //使用公共注册验证
+      doRegister(res);
+
+    } catch (error: any) {
+      // const defaultLoginFailureMessage = '注册失败，请重试！';
       console.log("超市菜市场:",error.message);
       message.error(error.message);
     }
   };
 
-  //邮箱登录
-  const handleEmailSubmit = async (values: API.UserEmailLoginRequest) => {
-    try {
-      // 登录
-      const res = await userEmailLoginUsingPost({
-        ...values,
-      });
-     //使用公共登录验证
-      doLogin(res);
-
-    } catch (error: any) {
-      // const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log("超市菜市场:",error.message);
-      message.error(error.message);
-    }
-  };
-
-  const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录页'}- {Settings.title}
+          {'注册页'}- {Settings.title}
         </title>
       </Helmet>
 
@@ -167,21 +142,27 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
+          submitter={
+            {
+              searchConfig: {
+                submitText: "注册"
+              }
+            }}
           logo={<img alt="logo" src="/logo.gif" />}
           title="Dong-API 接口开放平台"
           subTitle={'Dong-API 接口开放平台致力于提供稳定、安全、高效的接口调用服务'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={['其他登录方式', <ActionIcons key="icons" />]}
+          actions={['其他注册方式', <ActionIcons key="icons" />]}
 
           onFinish={async (values) => {
             if (type === "account"){
-              console.log("账号密码登录:",values);
-              await handleSubmit(values as API.UserLoginRequest);
+              console.log("账号密码注册:",values);
+              await handleSubmit(values as API.UserRegisterRequest);
             } else {
-              console.log("qq邮箱登录:",values);
-              await handleEmailSubmit(values as API.UserEmailLoginRequest);
+              console.log("邮箱注册:",values);
+              await handleEmailSubmit(values as API.UserEmailRegister);
             }
           }}
         >
@@ -192,23 +173,35 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账户密码登录',
+                label: '平台账号注册',
               },
               {
                 key: 'email',
-                label: '邮箱登录',
+                label: '邮箱注册',
               },
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'账户或密码错误(admin/ant.design)'} />
-          )}
 
 
-          {/*账号密码登录type === 'account'*/}
+          {/*账号密码注册type === 'account'*/}
           {type === 'account' && (
             <>
+              <ProFormText
+                name="userName"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <RedditOutlined/>,
+                }}
+                placeholder={'请输入昵称'}
+                rules={[
+                  {
+                    required: true,
+                    message: '昵称不能为空!',
+                  },
+                ]}
+              />
+
               <ProFormText
                 name="userAccount"
                 fieldProps={{
@@ -223,6 +216,7 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+
               <ProFormText.Password
                 name="userPassword"
                 fieldProps={{
@@ -237,16 +231,52 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+
+              <ProFormText.Password
+                name="checkPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                placeholder={'请确认密码'}
+                rules={[
+                  {
+                    required: true,
+                    message: '确认密码不能为空！',
+                  },
+                ]}
+              />
+
+              <ProFormText
+                name="invitationCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LinkOutlined />,
+                }}
+                placeholder={'请输入邀请码: 没有可不填'}
+              />
             </>
           )}
 
 
-
-          {status === 'error' && loginType === 'email' && <LoginMessage content="验证码错误" />}
-
-          {/*验证码登录type === 'email'*/}
+          {/*验证码注册type === 'email'*/}
           {type === 'email' && (
             <>
+              <ProFormText
+                name="userName"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <RedditOutlined/>,
+                }}
+                placeholder={'请输入昵称'}
+                rules={[
+                  {
+                    required: true,
+                    message: '昵称不能为空!',
+                  },
+                ]}
+              />
+
               <ProFormText
                 fieldProps={{
                   size: 'large',
@@ -265,6 +295,16 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
+
+              <ProFormText
+                name="invitationCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LinkOutlined />,
+                }}
+                placeholder={'请输入邀请码: 没有可不填'}
+              />
+
               <ProFormCaptcha
                 fieldProps={{
                   size: 'large',
@@ -308,15 +348,15 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
+              自动注册
             </ProFormCheckbox>
             <Link
-              to={'/user/register'}
+              to={'/user/login'}
               style={{
                 float: 'right',
               }}
             >
-              还没有密码？前往去注册
+              已经有账号？前往去注册
             </Link>
           </div>
         </LoginForm>
@@ -325,4 +365,4 @@ const Login: React.FC = () => {
     </div>
   );
 };
-export default Login;
+export default Register;

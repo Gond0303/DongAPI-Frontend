@@ -2,30 +2,37 @@ import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
+import Settings from '../config/defaultSettings'
 import { Link, history } from '@umijs/max';
 import { requestConfig} from './requestConfig';
 import {getLoginUserUsingGet} from "@/services/dongapi-backend/userController";
-import initialState from "@@/plugin-initialState/@@initialState";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
+
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<InitialState> {
   //当页面首次加载时候，获取要全局缓存的数据，比如用户登录信息
-  const state: InitialState = {
-    loginUser: undefined
-  }
+  // const state: InitialState = {
+  //   loginUser: undefined
+  // }
+  const stats: InitialState = {
+    loginUser: undefined,
+    settings: Settings,
+    open: false
+  };
   try {
     const res = await getLoginUserUsingGet();
     if (res.data){
-      state.loginUser = res.data;
+      stats.loginUser = res.data;
     }
   } catch (error) {
     history.push(loginPath);
   }
-  return state;
+  return stats;
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout

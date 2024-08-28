@@ -29,6 +29,36 @@ export async function deleteUserUsingPost(
   });
 }
 
+/** userEmailLogin POST /api/user/email/login */
+export async function userEmailLoginUsingPost(
+  body: API.UserEmailLoginRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUserVO>('/api/user/email/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** userEmailRegister POST /api/user/email/register */
+export async function userEmailRegisterUsingPost(
+  body: API.UserEmailRegister,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponselong>('/api/user/email/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** getUserById GET /api/user/get */
 export async function getUserByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -48,6 +78,21 @@ export async function getUserByIdUsingGet(
 export async function getLoginUserUsingGet(options?: { [key: string]: any }) {
   return request<API.BaseResponseUserVO>('/api/user/get/login', {
     method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** getCaptcha GET /api/user/getCaptcha */
+export async function getCaptchaUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getCaptchaUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/getCaptcha', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }
