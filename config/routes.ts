@@ -1,7 +1,18 @@
 export default [
-  { path: '/', name: '主页', icon: 'smile', component: './Index' },
+  { path: '/', name: '欢迎', icon: 'smile', component: './Welcome' },
+  { path: '/:id', name: '欢迎', icon: 'smile', component: './Welcome', hideInMenu: true },
 
-  // 动态路由，携带id
+
+
+  //接口广场
+  {
+    path: '/interface/list',
+    name: '接口广场',
+    icon: 'RobotOutlined',
+    component: './InterfaceSquare',
+  },
+
+  // 查看具体接口信息，动态路由，携带id
   {
     path: '/interface_info/:id',
     name: '查看接口',
@@ -23,13 +34,7 @@ export default [
     ],
   },
 
-  //接口广场
-  {
-    path: '/interface/list',
-    name: '接口广场',
-    icon: 'RobotOutlined',
-    component: './InterfaceSquare',
-  },
+
 
   {
     path: '/admin',
@@ -50,6 +55,14 @@ export default [
         name: '接口分析',
       },
     ],
+  },
+
+  {
+    path: '/account/center',
+    name: '个人中心',
+    icon: 'UserOutlined',
+    component: './User/UserInfo',
+    hideInMenu: true,
   },
 
   // {path: '/', redirect: '/intserfaceInfo'},

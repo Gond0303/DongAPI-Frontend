@@ -18,6 +18,7 @@ import { ProLayoutProps } from '@ant-design/pro-components';
 const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
+  navTheme?: string
 } = {
   navTheme: 'light',
   colorPrimary: "#1677FF",
@@ -30,7 +31,7 @@ const Settings: ProLayoutProps & {
   title: 'Dong-API 接口开放平台',
   pwa: false,
   // logo: 'https://img.qimuu.icu/typory/logo.gif',
-  iconfontUrl: 'https://img.qimuu.icu/typory/logo.gif',
+  iconfontUrl: "https://dongapi.oss-cn-hangzhou.aliyuncs.com/logo.gif",
 };
 
 export default Settings;

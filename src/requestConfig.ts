@@ -1,6 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
-import type { RequestConfig } from '@umijs/max';
-import { message, notification } from 'antd';
+import {history, RequestConfig} from '@umijs/max';
+import {message} from "antd";
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -46,10 +46,21 @@ export const requestConfig: RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
 
+      const { code } = data;
       // 设置自己的
-      console.log("data:",data);
-      if (data.code !== 0){
-        throw new Error(data.message);
+      // console.log("data:",data);
+      // console.log("code:",code);
+      if (data.code === 0){
+        return response;
+      } else {
+        //40001:被封禁、40100：未登录
+        if (code === 40001 && !/^\/\w+\/?$/.test(location.pathname) && location.pathname !== '/' && location.pathname !== '/interface/list' && !location.pathname.includes('/interface_info/')) {
+          message.error(data.message);
+          history.push('/user/login');
+        }else {
+          //其他报错先直接抛出
+          message.error(data.message);
+        }
       }
       return response;
     },

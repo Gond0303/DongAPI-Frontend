@@ -356,7 +356,7 @@ const Register: React.FC = () => {
                 float: 'right',
               }}
             >
-              已经有账号？前往去注册
+              已经有账号？前往去登录
             </Link>
           </div>
         </LoginForm>

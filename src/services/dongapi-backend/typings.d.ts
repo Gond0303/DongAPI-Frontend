@@ -23,12 +23,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseListPost = {
-    code?: number;
-    data?: Post[];
-    message?: string;
-  };
-
   type BaseResponseListUserInterfaceInfo = {
     code?: number;
     data?: UserInterfaceInfo[];
@@ -59,12 +53,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePagePost = {
-    code?: number;
-    data?: PagePost;
-    message?: string;
-  };
-
   type BaseResponsePageUserInterfaceInfo = {
     code?: number;
     data?: PageUserInterfaceInfo;
@@ -74,18 +62,6 @@ declare namespace API {
   type BaseResponsePageUserVO = {
     code?: number;
     data?: PageUserVO;
-    message?: string;
-  };
-
-  type BaseResponsePost = {
-    code?: number;
-    data?: Post;
-    message?: string;
-  };
-
-  type BaseResponseUser = {
-    code?: number;
-    data?: User;
     message?: string;
   };
 
@@ -115,14 +91,14 @@ declare namespace API {
     id?: number;
   };
 
-  type getPostByIdUsingGETParams = {
+  type getUserByIdUsingGETParams = {
     /** id */
     id?: number;
   };
 
-  type getUserByIdUsingGETParams = {
-    /** id */
-    id?: number;
+  type getUserByInvitationCodeUsingPOSTParams = {
+    /** invitationCode */
+    invitationCode?: string;
   };
 
   type getUserInterfaceInfoByIdUsingGETParams = {
@@ -135,16 +111,22 @@ declare namespace API {
   };
 
   type InterfaceInfo = {
+    avatarUrl?: string;
     createTime?: string;
     description?: string;
     id?: number;
     isDeleted?: number;
     method?: string;
     name?: string;
+    reduceScore?: number;
+    requestExample?: string;
     requestHeader?: string;
     requestParams?: string;
     responseHeader?: string;
+    responseParams?: string;
+    returnFormat?: string;
     status?: number;
+    totalInvokes?: number;
     updateTime?: string;
     url?: string;
     userId?: number;
@@ -179,16 +161,22 @@ declare namespace API {
   };
 
   type InterfaceInfoVO = {
+    avatarUrl?: string;
     createTime?: string;
     description?: string;
     id?: number;
     isDeleted?: number;
     method?: string;
     name?: string;
+    reduceScore?: number;
+    requestExample?: string;
     requestHeader?: string;
     requestParams?: string;
     responseHeader?: string;
+    responseParams?: string;
+    returnFormat?: string;
     status?: number;
+    totalInvokes?: number;
     totalNum?: number;
     updateTime?: string;
     url?: string;
@@ -198,66 +186,46 @@ declare namespace API {
   type listInterfaceInfoByPageUsingGETParams = {
     current?: number;
     description?: string;
-    id?: number;
     method?: string;
     name?: string;
     pageSize?: number;
-    requestHeader?: string;
-    responseHeader?: string;
+    reduceScore?: number;
+    'responseParams[0].desc'?: string;
+    'responseParams[0].fieldName'?: string;
+    'responseParams[0].id'?: string;
+    'responseParams[0].type'?: string;
+    returnFormat?: string;
     sortField?: string;
     sortOrder?: string;
     status?: number;
     url?: string;
     userId?: number;
+  };
+
+  type listInterfaceInfoBySearchTextPageUsingPOSTParams = {
+    current?: number;
+    pageSize?: number;
+    searchText?: string;
+    sortField?: string;
+    sortOrder?: string;
   };
 
   type listInterfaceInfoUsingGETParams = {
     current?: number;
     description?: string;
-    id?: number;
     method?: string;
     name?: string;
     pageSize?: number;
-    requestHeader?: string;
-    responseHeader?: string;
+    reduceScore?: number;
+    'responseParams[0].desc'?: string;
+    'responseParams[0].fieldName'?: string;
+    'responseParams[0].id'?: string;
+    'responseParams[0].type'?: string;
+    returnFormat?: string;
     sortField?: string;
     sortOrder?: string;
     status?: number;
     url?: string;
-    userId?: number;
-  };
-
-  type listPostByPageUsingGETParams = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    current?: number;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    pageSize?: number;
-    place?: string;
-    reviewStatus?: number;
-    sortField?: string;
-    sortOrder?: string;
-    userId?: number;
-  };
-
-  type listPostUsingGETParams = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    current?: number;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    pageSize?: number;
-    place?: string;
-    reviewStatus?: number;
-    sortField?: string;
-    sortOrder?: string;
     userId?: number;
   };
 
@@ -413,19 +381,6 @@ declare namespace API {
     total?: number;
   };
 
-  type PagePost = {
-    countId?: string;
-    current?: number;
-    maxLimit?: number;
-    optimizeCountSql?: boolean;
-    orders?: OrderItem[];
-    pages?: number;
-    records?: Post[];
-    searchCount?: boolean;
-    size?: number;
-    total?: number;
-  };
-
   type PageUserInterfaceInfo = {
     countId?: string;
     current?: number;
@@ -452,73 +407,6 @@ declare namespace API {
     total?: number;
   };
 
-  type Post = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    createTime?: string;
-    education?: string;
-    gender?: number;
-    id?: number;
-    isDelete?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-    reviewMessage?: string;
-    reviewStatus?: number;
-    thumbNum?: number;
-    updateTime?: string;
-    userId?: number;
-    viewNum?: number;
-  };
-
-  type PostAddRequest = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    education?: string;
-    gender?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-  };
-
-  type PostUpdateRequest = {
-    age?: number;
-    contact?: string;
-    content?: string;
-    education?: string;
-    gender?: number;
-    id?: number;
-    job?: string;
-    loveExp?: string;
-    photo?: string;
-    place?: string;
-    reviewMessage?: string;
-    reviewStatus?: number;
-  };
-
-  type User = {
-    accessKey?: string;
-    balance?: number;
-    createTime?: string;
-    email?: string;
-    gender?: number;
-    id?: number;
-    invitationCode?: string;
-    isDelete?: number;
-    secretKey?: string;
-    status?: number;
-    updateTime?: string;
-    userAccount?: string;
-    userAvatar?: string;
-    userName?: string;
-    userPassword?: string;
-    userRole?: string;
-  };
-
   type UserAddRequest = {
     gender?: number;
     userAccount?: string;
@@ -526,6 +414,11 @@ declare namespace API {
     userName?: string;
     userPassword?: string;
     userRole?: string;
+  };
+
+  type UserBindEmailRequest = {
+    captcha?: string;
+    emailAccount?: string;
   };
 
   type UserEmailLoginRequest = {
@@ -580,9 +473,16 @@ declare namespace API {
     userPassword?: string;
   };
 
+  type UserUnBindEmailRequest = {
+    captcha?: string;
+    emailAccount?: string;
+  };
+
   type UserUpdateRequest = {
+    balance?: number;
     gender?: number;
     id?: number;
+    status?: number;
     userAccount?: string;
     userAvatar?: string;
     userName?: string;
@@ -591,12 +491,14 @@ declare namespace API {
   };
 
   type UserVO = {
+    accessKey?: string;
     balance?: number;
     createTime?: string;
     email?: string;
     gender?: number;
     id?: number;
     invitationCode?: string;
+    secretKey?: string;
     status?: number;
     updateTime?: string;
     userAccount?: string;

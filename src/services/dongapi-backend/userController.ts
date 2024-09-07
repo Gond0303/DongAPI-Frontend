@@ -14,6 +14,21 @@ export async function addUserUsingPost(body: API.UserAddRequest, options?: { [ke
   });
 }
 
+/** userBindEmail POST /api/user/bind/login */
+export async function userBindEmailUsingPost(
+  body: API.UserBindEmailRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUserVO>('/api/user/bind/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** deleteUser POST /api/user/delete */
 export async function deleteUserUsingPost(
   body: API.DeleteRequest,
@@ -67,6 +82,21 @@ export async function getUserByIdUsingGet(
 ) {
   return request<API.BaseResponseUserVO>('/api/user/get', {
     method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** getUserByInvitationCode POST /api/user/get/invitationCode */
+export async function getUserByInvitationCodeUsingPost(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserByInvitationCodeUsingPOSTParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUserVO>('/api/user/get/invitationCode', {
+    method: 'POST',
     params: {
       ...params,
     },
@@ -132,7 +162,7 @@ export async function userLoginUsingPost(
   body: API.UserLoginRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseUser>('/api/user/login', {
+  return request<API.BaseResponseUserVO>('/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -165,17 +195,40 @@ export async function userRegisterUsingPost(
   });
 }
 
-/** updateUser POST /api/user/update */
-export async function updateUserUsingPost(
-  body: API.UserUpdateRequest,
+/** userUnBindEmail POST /api/user/unbindEmail */
+export async function userUnBindEmailUsingPost(
+  body: API.UserUnBindEmailRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseboolean>('/api/user/update', {
+  return request<API.BaseResponseUserVO>('/api/user/unbindEmail', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** updateUser POST /api/user/update */
+export async function updateUserUsingPost(
+  body: API.UserUpdateRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUserVO>('/api/user/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** updateVoucher POST /api/user/update/voucher */
+export async function updateVoucherUsingPost(options?: { [key: string]: any }) {
+  return request<API.BaseResponseUserVO>('/api/user/update/voucher', {
+    method: 'POST',
     ...(options || {}),
   });
 }
